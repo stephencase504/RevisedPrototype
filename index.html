@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.css">
+  
+  <style>
+    /* Set the background color and font for the entire page */
+    body {
+      background: #FFFDD0;
+      font-family: 'Futura URW Extra Bold', Arial Block, sans-serif;
+      font-weight: bold;
+    }
+
+    /* Define a grid container with 6 rows and a gap of 50px */
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto auto auto auto;
+      gap: 50px;
+    }
+
+    /* Style the logo area, which is placed in the first row of the grid */
+    .logo {
+      padding: 1em;
+      margin-left: 30em;
+      margin-right: 30em;
+      grid-row: 1;
+    }
+
+    /* Ensure the logo image fits within its container */
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Style the header text, which is placed in the second row of the grid */
+    .header {
+      color: #880015;
+      text-align: center;
+      font-size: 64pt;
+      padding: 1em;
+      margin-left: 0em;
+      margin-right: 0em;
+      margin-top: -1em;
+      margin-bottom: -1.5em;
+      grid-row: 2;
+    }
+
+    /* Style the call-to-action (CTA) section, which is a 4-column grid placed in the third row of the main grid */
+    .cta {
+      color: #880015;
+      text-align: center;
+      padding: 2em;
+      margin-left: 15em;
+      margin-right: 15em;
+      grid-row: 3;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Style the primary button */
+    .btn-primary {
+      background-color: #8792D8 !important;
+      color: #FFFFFF !important;
+      border-color: #8792D8;
+       !important;
+    }
+
+    /* Change the primary button's color when hovered over */
+    .btn-primary:hover {
+      background-color: #880015 !important;
+      color: #FFFFFF !important;
+      border-color: #880015;
+       !important;
+    }
+
+    /* Popup container */
+    .cta-topic {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    /* The actual popup (appears on top) */
+    .cta-topic .cta-popuptext {
+      visibility: hidden;
+      width: 75%;
+      height: 75%;
+      background-color: #ffffff;
+      color: #8792D8;
+      text-align: left;
+      border-color: #8792D8;
+      border-style: solid;
+      border-width: 5px;
+      padding: 8px 0;
+      position: fixed;
+      z-index: 2;
+      left: 12.5%;
+      top: 12.5%;
+      cursor: default;
+      opacity: 0;
+      transition: opacity 0.5s linear;
+    }
+
+    /* Popup backdrop */
+    .backdrop {
+      visibility: hidden;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Toggle this class when clicking on the popup container (hide and show the popup) */
+    .cta-topic .show {
+      visibility: visible;
+      opacity: 1;
+      transition: visibility 0s, opacity 0.5s linear;
+    }
+
+    /* Add animation (fade in the popup) */
+    @-webkit-keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Close button */
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      /* Increase the font size */
+      cursor: pointer;
+      width: 40px;
+      /* Add a width */
+      height: 40px;
+      /* Add a height */
+      line-height: 40px;
+      /* Center the 'x' vertically */
+      text-align: center;
+      /* Center the 'x' horizontally */
+    }
+
+    /* Style the gallery section, which is placed in the fourth row of the main grid */
+    .gallery {
+      color: #880015;
+      text-align: center;
+      margin-left: 15em;
+      margin-right: 15em;
+      grid-row: 4;
+    }
+
+    /* Style the topics section, which is a 4-column grid placed in the fifth row of the main grid */
+    .topics {
+      text-align: center;
+      font-size: 20px;
+      padding: 5em;
+      margin-left: 10em;
+      margin-right: 10em;
+      margin-top: -5em;
+      grid-row: 5;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 10px;
+      justify-content: space-around;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+	/* Change color and size of icons */
+	.my-icon {
+      font-size: 125px;
+	  color: #8792D8;
+    }
+	
+	/* Change the color of icon when hovered over */
+    .my-icon:hover {
+      color: #880015;
+      /* Change color on hover */
+	 }
+	
+    /* Change the color of a topic when hovered over */
+    .topic:hover {
+      color: #880015;
+      /* Change color on hover */
+    }
+
+    /* Popup container */
+    .topic {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    /* The actual popup (appears on top) */
+    .topic .popuptext {
+      opacity: 0;
+      width: 75%;
+      height: 75%;
+      background-color: #ffffff;
+      color: #8792D8;
+      text-align: left;
+      text-indent: 10px;
+      border-color: #8792D8;
+      border-style: solid;
+      border-width: 5px;
+      padding: 8px 0;
+      position: fixed;
+      z-index: 2;
+      left: 12.5%;
+      top: 12.5%;
+      cursor: default;
+      transition: opacity 0.5s linear;
+      pointer-events: none;
+    }
+
+    /* Popup backdrop */
+    .backdrop {
+      visibility: hidden;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Toggle this class when clicking on the popup container (hide and show the popup) */
+    .topic .show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Add animation (fade in the popup) */
+    @-webkit-keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Close button */
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      /* Increase the font size */
+      cursor: pointer;
+      width: 40px;
+      /* Add a width */
+      height: 40px;
+      /* Add a height */
+      line-height: 40px;
+      /* Center the 'x' vertically */
+      text-align: center;
+      /* Center the 'x' horizontally */
+    }
+
+    /* Icon colors */
+    .problem-icon {
+      color: red;
+    }
+
+    .solution-icon {
+      color: limegreen;
+    }
+
+    /* Style the main content section, which is placed in the sixth row of the main grid */
+    .main-content {
+      color: #880015;
+      font-size: 30px;
+      text-align: center;
+      padding-top: 5em;
+      margin-left: 5em;
+      margin-right: 5em;
+      margin-top: -8em;
+      grid-row: 6;
+    }
+
+    /* Style the footer, which is placed in the seventh row of the main grid */
+    .footer {
+      background: #8792D8;
+      color: #880015;
+      text-align: center;
+      padding: 5em;
+      margin-left: -5em;
+      margin-right: -5em;
+      grid-row: 7;
+    }
+
+    /* Styles for screens with a maximum width of 576px */
+    @media (max-width: 576px) {
+
+      /* Adjust the position of the body */
+      body {
+        position: relative;
+        left: -208px;
+        /* Adjust as needed */
+      }
+
+      /* Adjust the margins of the logo */
+      .logo {
+        margin-left: 15em;
+        margin-right: 15em;
+      }
+
+      /* Adjust the margins of the header */
+      .header {
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      /* Adjust the margins of the call-to-action section */
+      .cta {
+        margin-left: 20em;
+        margin-right: 20em;
+      }
+
+      /* Adjust the margins of the gallery */
+      .gallery {
+        margin-left: 15em;
+        margin-right: 15em;
+      }
+
+      /* Adjust the margins of the topics section */
+      .topics {
+        margin-left: 6em;
+        margin-right: 6em;
+      }
+
+      /* Adjust the margins of the main content section */
+      .main-content {
+        margin-left: 15em;
+        margin-right: 15em;
+      }
+
+      /* Adjust the margins of the footer */
+      .footer {
+        margin-left: -15em;
+        margin-right: -15em;
+      }
+    }
+
+    /* Styles for screens with a minimum width of 576px and a maximum width of 768px */
+    @media (min-width: 576px) and (max-width: 768px) {
+
+      /* Adjust the position of the body */
+      body {
+        position: relative;
+        left: -208px;
+        /* Adjust as needed */
+      }
+
+      /* Adjust the margins of the logo */
+      .logo {
+        margin-left: 12em;
+        margin-right: 12em;
+      }
+
+      /* Adjust the margins of the header */
+      .header {
+        margin-left: 0em;
+        margin-right: 0em;
+      }
+
+      /* Adjust the margins of the call-to-action section */
+      .cta {
+        margin-left: 10em;
+        margin-right: 10em;
+      }
+
+      /* Adjust the margins of the gallery */
+      .gallery {
+        margin-left: 10em;
+        margin-right: 10em;
+      }
+
+      /* Adjust the margins of the topics section */
+      .topics {
+        margin-left: 4em;
+        margin-right: 4em;
+      }
+
+      /* Adjust the margins of the main content section */
+      .main-content {
+        margin-left: 6em;
+        margin-right: 6em;
+      }
+
+      /* Adjust the margins of the footer */
+      .footer {
+        margin-left: -6em;
+        margin-right: -6em;
+      }
+    }
+
+    /* Styles for screens with a minimum width of 768px and a maximum width of 992px */
+    @media (min-width: 768px) and (max-width: 992px) {
+
+      /* Adjust the position of the body */
+      body {
+        position: relative;
+        left: -165px;
+        /* Adjust as needed */
+      }
+
+      /* Adjust the margins of the logo */
+      .logo {
+        margin-left: 25em;
+        margin-right: 25em;
+      }
+
+      /* Adjust the margins of the header */
+      .header {
+        margin-left: 0em;
+        margin-right: 0em;
+      }
+
+      /* Adjust the margins of the call-to-action section */
+      .cta {
+        margin-left: 9em;
+        margin-right: 9em;
+      }
+
+      /* Adjust the margins of the gallery */
+      .gallery {
+        margin-left: 9em;
+        margin-right: 9em;
+      }
+
+      /* Adjust the margins of the topics section */
+      .topics {
+        margin-left: 6em;
+        margin-right: 6em;
+      }
+
+      /* Adjust the margins of the main content section */
+      .main-content {
+        margin-left: 6em;
+        margin-right: 6em;
+      }
+
+      /* Adjust the margins of the footer */
+      .footer {
+        margin-left: -6em;
+        margin-right: -6em;
+      }
+    }
+
+    /* Styles for screens with a minimum width of 992px and a maximum width of 1200px */
+    @media (min-width: 992px) and (max-width: 1200px) {
+
+      /* Adjust the position of the body */
+      body {
+        position: relative;
+        left: -92px;
+        /* Adjust as needed */
+      }
+
+      /* Adjust the margins of the logo */
+      .logo {
+        margin-left: 24em;
+        margin-right: 24em;
+      }
+
+      /* Adjust the margins of the header */
+      .header {
+        margin-left: 0em;
+        margin-right: 0em;
+      }
+
+      /* Adjust the margins of the call-to-action section */
+      .cta {
+        margin-left: 12em;
+        margin-right: 12em;
+      }
+
+      /* Adjust the margins of the gallery */
+      .gallery {
+        margin-left: 12em;
+        margin-right: 12em;
+      }
+
+      /* Adjust the margins of the topics section */
+      .topics {
+        margin-left: 8em;
+        margin-right: 8em;
+      }
+
+      /* Adjust the margins of the main content section */
+      .main-content {
+        margin-left: 4em;
+        margin-right: 4em;
+      }
+
+      /* Adjust the margins of the footer */
+      .footer {
+        margin-left: -4em;
+        margin-right: -4em;
+      }
+    }
+
+    /* Styles for screens with a minimum width of 1200px and a maximum width of 1400px */
+    @media (min-width: 1200px) and (max-width: 1400px) {
+
+      /* Adjust the position of the body */
+      body {
+        position: relative;
+        left: -40px;
+        /* Adjust as needed */
+      }
+
+      /* Adjust the margins of the logo */
+      .logo {
+        margin-left: 30em;
+        margin-right: 30em;
+      }
+
+      /* Adjust the margins of the header */
+      .header {
+        margin-left: 0em;
+        margin-right: 0em;
+      }
+
+      /* Adjust the margins of the call-to-action section */
+      .cta {
+        margin-left: 15em;
+        margin-right: 15em;
+      }
+
+      /* Adjust the margins of the gallery */
+      .gallery {
+        margin-left: 15em;
+        margin-right: 15em;
+      }
+
+      /* Adjust the margins of the topics section */
+      .topics {
+        margin-left: 10em;
+        margin-right: 10em;
+      }
+
+      /* Adjust the margins of the main content section */
+      .main-content {
+        margin-left: 5em;
+        margin-right: 5em;
+      }
+
+      /* Adjust the margins of the footer */
+      .footer {
+        margin-left: -5em;
+        margin-right: -5em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Main container for the page -->
+  <div class="container">
+    <!-- Logo section -->
+    <div class="logo">
+      <!-- Logo image -->
+      <img src="img/autismacceptanceblack.svg" alt="Logo" class="logo-img">
+    </div>
+
+    <!-- Header section -->
+    <h1 class="header">AUTISM ACCEPTANCE</h1>
+
+    <!-- Call-to-action (CTA) section -->
+    <div class="cta">
+      <!-- Each div within the CTA section contains a button -->
+      <div class="cta-topic">
+        <button type="button" class="btn btn-primary" onclick="myFunction('cta-popup1', 'cta-backdrop1')">Join the Cause</button>
+        <!-- Popup text -->
+        <span class="cta-popuptext" id="cta-popup1">
+          <span class="close" onclick="event.stopPropagation(); closePopup('cta-popup1', 'cta-backdrop1')">&times;</span>
+		  <br><br><br>
+		  <p> Join our cause by signing up to daily email alerts! </p>
+		  <br><br><br>
+          <form>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email"><br><br>
+            <input type="submit" value="Submit">
+          </form>
+        </span>
+        <!-- Popup backdrop -->
+        <div class="backdrop" id="cta-backdrop1"></div>
+      </div>
+      <div class="cta-topic">
+        <button type="button" class="btn btn-primary" onclick="myFunction('cta-popup2', 'cta-backdrop2')">Learn More</button>
+        <span class="cta-popuptext" id="cta-popup2">
+		  <br><br><br>
+		  <p> For more information about Autism Acceptance, check out these resource links below! </p>
+		  <br><br><br>
+          <span class="close" onclick="event.stopPropagation(); closePopup('cta-popup2', 'cta-backdrop2')">&times;</span>
+          <a href="#">Resource 1</a><br><br>
+          <a href="#">Resource 2</a><br><br>
+          <a href="#">Resource 3</a><br><br>
+          <a href="#">Resource 4</a><br><br>
+          <a href="#">Resource 5</a><br><br>
+        </span>
+        <div class="backdrop" id="cta-backdrop2"></div>
+      </div>
+      <div class="cta-topic">
+  <button type="button" class="btn btn-primary" onclick="myFunction('cta-popup3', 'cta-backdrop3')">Donate Now</button>
+  <span class="cta-popuptext" id="cta-popup3">
+    <span class="close" onclick="event.stopPropagation(); closePopup('cta-popup3', 'cta-backdrop3')">×</span>
+	<br><br><br>
+    <p>Feel free to make a donation to help promote autism acceptance! Every dollar helps!</p>
+	<br><br><br>
+    <form>
+      <div style="display: flex; justify-content: flex-start;">
+        <div style="margin-right: 2px;">
+          <label for="fname">First Name:</label><br>
+          <input type="text" id="fname" name="fname">
+        </div>
+        <div style="margin-left: 2px;">
+          <label for="lname">Last Name:</label><br>
+          <input type="text" id="lname" name="lname">
+        </div>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address">
+      </div>
+      <div style="display: flex; justify-content: flex-start; margin-bottom: 10px;">
+        <div style="margin-right: 2px;">
+          <label for="city">City:</label><br>
+          <input type="text" id="city" name="city">
+        </div>
+        <div style="margin-left: 2px; margin-right: 2px;">
+          <label for="state">State:</label><br>
+          <input type="text" id="state" name="state">
+        </div>
+        <div style="margin-left: 2px;">
+          <label for="zip">Zipcode:</label><br>
+          <input type="text" id="zip" name="zip">
+        </div>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label for="amount">Donation Amount:</label><br>
+        <input type="number" id="amount" name="amount">
+      </div>
+      <div style="display: flex; justify-content: flex-start;">
+        <div style="margin-right: 2px;">
+          <label for="ccn">Credit Card Number:</label><br>
+          <input type="text" id="ccn" name="ccn">
+        </div>
+        <div style="margin-left: 2px;">
+          <label for="cvv">CVV:</label><br>
+          <input type="text" id="cvv" name="cvv" maxlength="3">
+        </div>
+      </div>
+      <input type="submit" value="Submit">
+    </form>
+  </span>
+  <div class="backdrop" id="cta-backdrop3"></div>
+</div>
+
+      <div class="cta-topic">
+        <button type="button" class="btn btn-primary" onclick="myFunction('cta-popup4', 'cta-backdrop4')">Share Your Story</button>
+        <span class="cta-popuptext" id="cta-popup4">
+          <span class="close" onclick="event.stopPropagation(); closePopup('cta-popup4', 'cta-backdrop4')">&times;</span>
+		  <br><br><br>
+		  <p>We'd love to hear your story! Feel free to share your story to inspire others!</p>
+		  <br><br><br>
+          <form>
+            <label for="fname">First Name:</label><br>
+            <input type="text" id="firstname" name="fname"><br>
+            <label for="lname">Last Name:</label><br>
+            <input type="text" id="lastname" name="lname"><br>
+            <label for="city">City:</label><br>
+            <input type="text" id="cityname" name="city"><br>
+            <label for="state">State:</label><br>
+            <input type="text" id="statename" name="state"><br>
+            <label for="story">Your Story:</label><br>
+            <textarea id="story" name="story"></textarea><br>
+            <input type="submit" value="Submit">
+          </form>
+        </span>
+        <div class="backdrop" id="cta-backdrop4"></div>
+      </div>
+    </div>
+
+    <!-- Gallery section with a carousel of images -->
+    <div class="gallery">
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <!-- Carousel indicators (the little dots at the bottom of the carousel) -->
+        <div class="carousel-indicators">
+          <!-- Each button corresponds to a slide in the carousel -->
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        </div>
+        <!-- Carousel inner section containing the slides -->
+        <div class="carousel-inner">
+          <!-- Each div within the carousel inner section is a slide -->
+          <div class="carousel-item active">
+            <img src="img/autismacceptance.jpg" class="d-block w-100" alt="Autism Acceptance">Autism Acceptance
+          </div>
+          <div class="carousel-item">
+            <img src="img/education.jpg" class="d-block w-100" alt="Achieving Educational Equality">Achieving Educational Equality
+          </div>
+          <div class="carousel-item">
+            <img src="imgemployment.jpg" class="d-block w-100" alt="Enacting Inclusive Hiring">Enacting Inclusive Hiring
+          </div>
+          <div class="carousel-item">
+            <img src="img/socialservices.jpg" class="d-block w-100" alt="Provide Help and Support">Provide Help and Support
+          </div>
+          <div class="carousel-item">
+            <img src="img/socialgatherings.jpg" class="d-block w-100" alt="Promote Overall Independence">Promote Overall Independence
+          </div>
+        </div>
+        <!-- Carousel controls (the previous and next buttons) -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Topics section -->
+    <div class="topics">
+      <!-- Each div within the topics section represents a topic -->
+      <div class="topic">
+        <!-- Bootstrap icon for the topic -->
+        <i class="bi bi-mortarboard-fill my-icon" onclick="myFunction('popup1', 'backdrop1')"></i>
+        <!-- Topic text -->
+        <p>Education</p>
+        <!-- Popup text -->
+        <span class="popuptext" id="popup1">
+          <span class="close" onclick="event.stopPropagation(); closePopup('popup1', 'backdrop1')">&times;</span>
+          <br>
+          <br>
+          <i class="bi bi-question-circle-fill problem-icon"></i> Problem: Lack of tailored education programs<br><br><br>
+          <i class="bi bi-check-circle-fill solution-icon"></i> Solution: Develop inclusive curricula<br><br><br>
+          <i class="bi bi-question-circle-fill problem-icon"></i> Problem: Insufficient teacher training<br><br><br>
+          <i class="bi bi-check-circle-fill solution-icon"></i> Solution: Provide specialized training for educators
+        </span>
+        <!-- Popup backdrop -->
+        <div class="backdrop" id="backdrop1"></div>
+      </div>
+      <div class="topic">
+        <i class="bi bi-briefcase-fill my-icon" onclick="myFunction('popup2', 'backdrop2')"></i>
+        <p>Employment</p>
+        <span class="popuptext" id="popup2">
+          <span class="close" onclick="event.stopPropagation(); closePopup('popup2', 'backdrop2')">&times;</span>
+          <br>
+          <br>
+          <i class="bi bi-x-circle-fill problem-icon"></i> Problem 1<br><br><br>
+          <i class="bi bi-check-circle-fill solution-icon"></i> Solution 1<br><br><br>
+          <i class="bi bi-x-circle-fill problem-icon"></i> Problem 2<br><br><br>
+          <i class="bi bi-check-circle-fill solution-icon"></i> Solution 2
+        </span>
+        <div class="backdrop" id="backdrop2"></div>
+      </div>
+      <div class="topic">
+        <i class="bi bi-house-heart-fill my-icon" onclick="myFunction('popup3', 'backdrop3')"></i>
+        <p>Social Services</p>
+        <span class="popuptext" id="popup3">
+          <span class="close" onclick="event.stopPropagation(); closePopup('popup3', 'backdrop3')">&times;</span>
+          <br>
+          <br>
+          <i class="bi bi-x-circle-fill problem-icon"></i> Problem 1<br><br><br>
+          <i class="bi bi-check-circle-fill solution-icon"></i> Solution 1<br><br><br>
+          <i class="bi bi-x-circle-fill problem-icon"></i> Problem 2<br><br><br>
+          <i class="bi bi-check-circle-fill solution-icon"></i> Solution 2
+        </span>
+        <div class="backdrop" id="backdrop3"></div>
+      </div>
+      <div class="topic">
+        <i class="bi bi-people-fill my-icon" onclick="myFunction('popup4', 'backdrop4')"></i>
+        <p>Social Gatherings</p>
+        <span class="popuptext" id="popup4">
+          <span class="close" onclick="event.stopPropagation(); closePopup('popup4', 'backdrop4')">&times;</span>
+          <br>
+          <br>
+          <i class="bi bi-x-circle-fill problem-icon"></i> Problem 1<br><br><br>
+          <i class="bi bi-check-circle-fill solution-icon"></i> Solution 1<br><br><br>
+          <i class="bi bi-x-circle-fill problem-icon"></i> Problem 2<br><br><br>
+          <i class="bi bi-check-circle-fill solution-icon"></i> Solution 2
+        </span>
+        <div class="backdrop" id="backdrop4"></div>
+      </div>
+      <!-- Add similar code for other topics -->
+    </div>
+
+    <!-- Main content section -->
+    <div class="main-content">
+      <p>This is a web page about autism acceptance.
+        <br>
+        <br>
+        This page will show you the many problems that autistics face in Education, Employment, Social Services, and Social Gatherings and provide solutions.
+        <br>
+        <br>
+        We believe that these solutions will promote autism aceptance and achieve the educational equality, inclusive hiring practices, support systems, and overall independence for autistics everywhere.
+        <br>
+        <br>
+        Keywords used for SEO:
+        <br>
+        <br>
+        Autism
+        <br>
+        Equality
+        <br>
+        Inclusion
+        <br>
+        Support
+        <br>
+        Independence
+        <br>
+        Acceptance
+      </p>
+    </div>
+
+    <!-- Footer section -->
+    <div class="footer">
+      <p>Footer
+        <br>
+        <br>
+        Additional Information goes here.
+      </p>
+    </div>
+  </div>
+  <!-- Add Bootstrap JS -->
+  <script>
+    // When the user clicks on <div>, open the popup
+    function myFunction(popupId, backdropId) {
+      var popup = document.getElementById(popupId);
+      var backdrop = document.getElementById(backdropId);
+      popup.classList.toggle("show");
+      backdrop.classList.toggle("show");
+    }
+    // When the user clicks on <span> (x), close the popup
+    function closePopup(popupId, backdropId) {
+      var popup = document.getElementById(popupId);
+      var backdrop = document.getElementById(backdropId);
+      popup.classList.remove("show");
+      backdrop.classList.remove("show");
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+
+</html>
